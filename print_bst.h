@@ -1,3 +1,4 @@
+/*
 #include <cmath>
 #include <iomanip>
 #include <map>
@@ -63,7 +64,7 @@ int getSubtreeHeight(Node<Key, Value> * root, int recursionDepth = 1)
                     getSubtreeHeight(root->getRight(), recursionDepth + 1)) + 1;
 }
 
-/* Function to prettily print a BST out to the terminal.
+ Function to prettily print a BST out to the terminal.
 
    Output should look a bit like this:
 
@@ -90,7 +91,7 @@ int getSubtreeHeight(Node<Key, Value> * root, int recursionDepth = 1)
 	This function should handle broken trees without crashing,
 	and should print as much of them as it can.
 
-    */
+   
 
 template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::printRoot (Node<Key, Value>* root) const
