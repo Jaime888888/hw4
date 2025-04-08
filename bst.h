@@ -5,7 +5,6 @@
 #include <utility>
 #include <cstddef>
 #include <functional>
-// #include "print_bst.h" // optional debug, we are not using
 
 template <typename Key, typename Value>
 class Node {
@@ -39,8 +38,6 @@ public:
 
     BinarySearchTree() : root_(NULL) {}
     ~BinarySearchTree() { clear(); }
-
-    // void print() const { printRoot(root_); } // Debugging only
 
     void clear() { clearHelper(root_); root_ = NULL; }
 
@@ -118,9 +115,8 @@ public:
     bool isBalanced() const {
         return isBalancedHelper(root_).second;
     }
- void print() const {
-    // Dummy print function to avoid errors, does nothing
-}
+
+    void print() const { }
 
 protected:
     NodeType* root_;
@@ -175,14 +171,13 @@ protected:
     void swapNode(NodeType* a, NodeType* b) {
         if (a == b || a == NULL || b == NULL) return;
 
-        // Swap parent pointers
         NodeType* aParent = a->getParent();
         NodeType* bParent = b->getParent();
 
         bool aIsLeft = (aParent != NULL && aParent->getLeft() == a);
         bool bIsLeft = (bParent != NULL && bParent->getLeft() == b);
 
-        if (aParent == b) aParent = a; // special case: adjacent nodes
+        if (aParent == b) aParent = a;
         if (bParent == a) bParent = b;
 
         std::swap(a->parent, b->parent);
@@ -193,7 +188,6 @@ protected:
         if (bParent != NULL) (bIsLeft ? bParent->getLeft() : bParent->getRight()) = a;
         else root_ = a;
 
-        // Swap child pointers
         std::swap(a->left, b->left);
         if (a->getLeft() != NULL) a->getLeft()->parent = a;
         if (b->getLeft() != NULL) b->getLeft()->parent = b;
@@ -202,7 +196,6 @@ protected:
         if (a->getRight() != NULL) a->getRight()->parent = a;
         if (b->getRight() != NULL) b->getRight()->parent = b;
 
-        // Swap items (only the value, not the key)
         std::swap(const_cast<Value&>(a->getItem().second), const_cast<Value&>(b->getItem().second));
     }
 

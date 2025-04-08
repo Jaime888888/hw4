@@ -31,28 +31,30 @@ public:
         if (this->root_ == NULL) {
             this->root_ = new AVLNode<Key, Value>(keyValuePair, NULL);
             return;
-        }
+     }
 
-        AVLNode<Key, Value>* curr = static_cast<AVLNode<Key, Value>*>(this->root_);
+        AVLNode<Key, Value>* curr = static_cast<AVLNode<Key, Value>*>(this->root_); //current
         AVLNode<Key, Value>* parent = NULL;
 
-        while (curr != NULL) {
-            parent = curr;
-            if (keyValuePair.first < curr->getKey()) {
-                curr = curr->getLeft();
-            } else if (keyValuePair.first > curr->getKey()) {
-                curr = curr->getRight();
-            } else {
-                curr->getValue() = keyValuePair.second;
-                return;
-            }
-        }
+          while (curr != NULL) {
+              parent = curr;
+              if (keyValuePair.first < curr->getKey()) {
+                  curr = curr->getLeft();
+              } else if (keyValuePair.first > curr->getKey()) {
+                  curr = curr->getRight();
+              } else {
+                  curr->getValue() = keyValuePair.second;
+                  return;
+              }
+          }
 
         AVLNode<Key, Value>* newNode = new AVLNode<Key, Value>(keyValuePair, parent);
 
         if (keyValuePair.first < parent->getKey()) {
+
             parent->left = newNode;
         } else {
+
             parent->right = newNode;
         }
 
@@ -64,6 +66,7 @@ public:
         if (node == NULL) return;
 
         AVLNode<Key, Value>* parent = node->getParent();
+
         int diff = 0;
 
         if (node->getLeft() != NULL && node->getRight() != NULL) {
@@ -92,8 +95,6 @@ public:
     }
     void print() const {}
 
-
-     
 private:
     void rotateLeft(AVLNode<Key, Value>* x) {
         AVLNode<Key, Value>* y = x->getRight();
@@ -112,8 +113,8 @@ private:
         y->left = x;
         x->parent = y;
 
-        // Update balances
         x->setBalance(x->getBalance() + 1 - std::min(y->getBalance(), 0));
+        
         y->setBalance(y->getBalance() + 1 + std::max(x->getBalance(), 0));
     }
 
@@ -128,29 +129,31 @@ private:
         } else if (y == y->getParent()->getLeft()) {
             y->getParent()->left = x;
         } else {
+
             y->getParent()->right = x;
         }
 
         x->right = y;
         y->parent = x;
 
-        // Update balances
         y->setBalance(y->getBalance() - 1 - std::max(x->getBalance(), 0));
+
         x->setBalance(x->getBalance() - 1 + std::min(y->getBalance(), 0));
     }
 
-    void insertFix(AVLNode<Key, Value>* parent, AVLNode<Key, Value>* child) {
+    void insertFix(AVLNode<Key, Value>* parent, AVLNode<Key, Value>* child) {//balance
         if (parent == NULL) return;
 
         if (child == parent->getLeft()) {
             parent->updateBalance(-1);
+
         } else {
             parent->updateBalance(1);
         }
 
-        if (parent->getBalance() == 0) {
+        if (parent->getBalance() == 0) { //it is right
             return;
-        } else if (abs(parent->getBalance()) == 2) {
+        } else if (abs(parent->getBalance()) == 2) { // unbalance
             rebalance(parent);
             return;
         } else {
