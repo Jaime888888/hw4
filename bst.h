@@ -9,20 +9,21 @@
 template <typename Key, typename Value>
 class Node {
 public:
-    Node(const std::pair<const Key, Value>& keyValuePair, Node* parent)
-        : item_(keyValuePair), parent(parent), left(NULL), right(NULL) {}
+                    Node(const std::pair<const Key, Value>& keyValuePair, Node* parent)
+                        : item_(keyValuePair), parent(parent), left(NULL), right(NULL) {}
+                
 
-    const std::pair<const Key, Value>& getItem() const { return item_; }
-    std::pair<const Key, Value>& getItem() { return item_; }
-    const Key& getKey() const { return item_.first; }
-    const Value& getValue() const { return item_.second; }
-    Value& getValue() { return item_.second; }
-    Node* getParent() const { return parent; }
-    Node*& getParent() { return parent; }
-    Node* getLeft() const { return left; }
-    Node*& getLeft() { return left; }
-    Node* getRight() const { return right; }
-    Node*& getRight() { return right; }
+                    const std::pair<const Key, Value>& getItem() const { return item_; }
+                    std::pair<const Key, Value>& getItem() { return item_; }
+                    const Key& getKey() const { return item_.first; }
+                    const Value& getValue() const { return item_.second; }
+                    Value& getValue() { return item_.second; }
+                    Node* getParent() const { return parent; }
+                    Node*& getParent() { return parent; }
+                    Node* getLeft() const { return left; }
+                    Node*& getLeft() { return left; }
+                    Node* getRight() const { return right; }
+                    Node*& getRight() { return right; }
 
 protected:
     std::pair<const Key, Value> item_;
@@ -39,27 +40,38 @@ public:
     BinarySearchTree() : root_(NULL) {}
     ~BinarySearchTree() { clear(); }
 
-    void clear() { clearHelper(root_); root_ = NULL; }
+    virtual void clear() { 
+              std::cout << "we are at clear funtion at bst " << std::endl;
 
-    void insert(const std::pair<const Key, Value>& keyValuePair) {
-        if (root_ == NULL) {
-            root_ = new NodeType(keyValuePair, NULL);
-            return;
-        }
-        NodeType* curr = root_;
-        NodeType* parent = NULL;
+        clearHelper(root_); root_ = NULL;
+        
+         }
 
-        while (curr != NULL) {
-            parent = curr;
-            if (keyValuePair.first < curr->getKey()) {
-                curr = curr->getLeft();
-            } else if (keyValuePair.first > curr->getKey()) {
-                curr = curr->getRight();
-            } else {
-                curr->getValue() = keyValuePair.second;
+        void insert(const std::pair<const Key, Value>& keyValuePair) {
+            if (root_ == NULL) {
+                root_ = new NodeType(keyValuePair, NULL);
                 return;
             }
-        }
+
+
+
+            NodeType* curr = root_;
+
+
+
+            NodeType* parent = NULL;
+
+            while (curr != NULL) {
+                parent = curr;
+                if (keyValuePair.first < curr->getKey()) {
+                    curr = curr->getLeft();
+                } else if (keyValuePair.first > curr->getKey()) {
+                    curr = curr->getRight();
+                } else {
+                    curr->getValue() = keyValuePair.second;
+                    return;
+                }
+            }
 
         NodeType* newNode = new NodeType(keyValuePair, parent);
         if (keyValuePair.first < parent->getKey()) {
@@ -69,14 +81,16 @@ public:
         }
     }
 
-    void remove(const Key& key) {
-        NodeType* target = internalFind(key);
-        if (target == NULL) return;
+                    void remove(const Key& key) {
+                        NodeType* target = internalFind(key);
+                        if (target == NULL) return;
 
-        if (target->getLeft() != NULL && target->getRight() != NULL) {
-            NodeType* pred = predecessor(target);
-            swapNode(target, pred);
-        }
+                        if (target->getLeft() != NULL && target->getRight() != NULL) {
+                            NodeType* pred = predecessor(target);
+                            swapNode(target, pred);
+                        }
+
+
 
         NodeType* child = (target->getLeft() != NULL) ? target->getLeft() : target->getRight();
 
@@ -95,15 +109,26 @@ public:
         delete target;
     }
 
+
+
+
+
+
+
+
+
+
+
     NodeType* internalFind(const Key& key) const {
         NodeType* curr = root_;
         while (curr != NULL) {
-            if (key < curr->getKey()) curr = curr->getLeft();
-            else if (key > curr->getKey()) curr = curr->getRight();
-            else return curr;
+        if (key < curr->getKey()) curr = curr->getLeft();
+        else if (key > curr->getKey()) curr = curr->getRight();
+    else return curr;
         }
         return NULL;
     }
+
 
     NodeType* getSmallestNode() const {
         NodeType* curr = root_;
@@ -116,19 +141,26 @@ public:
         return isBalancedHelper(root_).second;
     }
 
-    void print() const { }
+    void print() const { } //DUMMY  
 
 protected:
     NodeType* root_;
 
-    void clearHelper(NodeType* node) {
-        if (node == NULL) return;
-        clearHelper(node->getLeft());
-        clearHelper(node->getRight());
-        delete node;
-    }
+            void clearHelper(NodeType* node) {        //clear helper 
+                if (node == NULL) {
+                    // std::cout << "nullptr - return with no delete :)\n";
+                    return;
+                }
+                // std::cout << "we are at helper funtion " << std::endl;
 
-    static NodeType* predecessor(NodeType* node) {
+                clearHelper(node->getLeft());
+                clearHelper(node->getRight());
+
+                // std::cout << "Deleting node with key: " << node->getKey() << std::endl;
+
+                delete node;
+            }
+static NodeType* predecessor(NodeType* node) {
         if (node == NULL) return NULL;
         if (node->getLeft() != NULL) {
             node = node->getLeft();
@@ -142,6 +174,12 @@ protected:
         }
         return parent;
     }
+
+
+
+
+
+
 
     static NodeType* successor(NodeType* node) {
         if (node == NULL) return NULL;
@@ -158,6 +196,11 @@ protected:
         return parent;
     }
 
+
+
+
+
+
     std::pair<int, bool> isBalancedHelper(NodeType* node) const {
         if (node == NULL) return std::make_pair(0, true);
 
@@ -168,36 +211,18 @@ protected:
         return std::make_pair(std::max(left.first, right.first) + 1, balanced);
     }
 
-    void swapNode(NodeType* a, NodeType* b) {
-        if (a == b || a == NULL || b == NULL) return;
+        void swapNode(NodeType* a, NodeType* b) {
+            if (a == b || a == NULL || b == NULL) return;
 
-        NodeType* aParent = a->getParent();
-        NodeType* bParent = b->getParent();
+            std::swap(const_cast<Key&>(a->getItem().first), const_cast<Key&>(b->getItem().first));
+            std::swap(a->getItem().second, b->getItem().second);
 
-        bool aIsLeft = (aParent != NULL && aParent->getLeft() == a);
-        bool bIsLeft = (bParent != NULL && bParent->getLeft() == b);
 
-        if (aParent == b) aParent = a;
-        if (bParent == a) bParent = b;
 
-        std::swap(a->parent, b->parent);
+}
 
-        if (aParent != NULL) (aIsLeft ? aParent->getLeft() : aParent->getRight()) = b;
-        else root_ = b;
 
-        if (bParent != NULL) (bIsLeft ? bParent->getLeft() : bParent->getRight()) = a;
-        else root_ = a;
 
-        std::swap(a->left, b->left);
-        if (a->getLeft() != NULL) a->getLeft()->parent = a;
-        if (b->getLeft() != NULL) b->getLeft()->parent = b;
-
-        std::swap(a->right, b->right);
-        if (a->getRight() != NULL) a->getRight()->parent = a;
-        if (b->getRight() != NULL) b->getRight()->parent = b;
-
-        std::swap(const_cast<Value&>(a->getItem().second), const_cast<Value&>(b->getItem().second));
-    }
 
 public:
     class iterator {
@@ -206,13 +231,25 @@ public:
         std::pair<const Key, Value>& operator*() const { return curr->getItem(); }
         std::pair<const Key, Value>* operator->() const { return &(curr->getItem()); }
 
+
+
+
+
         bool operator==(const iterator& rhs) const { return curr == rhs.curr; }
         bool operator!=(const iterator& rhs) const { return curr != rhs.curr; }
+
+
+
+
+
+
 
         iterator& operator++() {
             curr = successor(curr);
             return *this;
         }
+
+
 
     protected:
         NodeType* curr;
@@ -228,4 +265,18 @@ public:
     }
 };
 
+
+
+
+
 #endif
+
+
+
+
+
+
+
+
+
+

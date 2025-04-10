@@ -16,7 +16,7 @@ bool checkEqualPaths(Node* node, int depth, int& pathLength) {
         }
         return pathLength == depth;
     }
-
+//ds
   
     bool leftCheck = checkEqualPaths(node->left, depth + 1, pathLength);
     bool rightCheck = checkEqualPaths(node->right, depth + 1, pathLength);
